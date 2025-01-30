@@ -9,7 +9,11 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 #from langchain_community.llms import Ollama
 from langchain_ollama.chat_models import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables from .env.
 
 # Configuration
 MODEL_CONFIG = {
@@ -192,7 +196,7 @@ def main():
                 return
                 
             # Initialize language model
-            llm = ChatOllama(model="deepseek-r1:1.5b", temperature=0.1)
+            llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0)
             
             # Set up QA chain
             qa_chain = load_qa_chain(
