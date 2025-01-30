@@ -3,6 +3,7 @@ PyPDF2
 pandas
 langchain
 langchain-community
+langchain-ollama
 sentence-transformers
 faiss-cpu
 protobuf
