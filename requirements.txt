@@ -4,6 +4,7 @@ pandas
 langchain
 langchain-community
 langchain-ollama
+langchain-google-genai
 sentence-transformers
 faiss-cpu
 protobuf
