@@ -33,39 +33,23 @@ class ModelManager:
     This simplified version focuses on direct integration with Google's API through LangChain.
     """
     
+    class ModelManager:
     def __init__(self):
-        # Initialize model attribute as None - will be set during initialization
-        self.model = None
-        
+        if "gemini_model" not in st.session_state:
+            st.session_state.gemini_model = None
+
     def initialize_model(self):
-        """
-        Initializes the Gemini model using environment variables for authentication.
-        Includes proper error handling and user feedback through Streamlit.
-        
-        Returns:
-            ChatGoogleGenerativeAI: Initialized model instance or None if initialization fails
-        """
         try:
-            # Only initialize if model hasn't been created yet
-            if self.model is None:
+            if st.session_state.gemini_model is None:
                 with st.spinner("Initializing Gemini... 🚀"):
-                    
-                    # Create the model instance with optimized parameters
-                    self.model = ChatGoogleGenerativeAI(
+                    st.session_state.gemini_model = ChatGoogleGenerativeAI(
                         model=MODEL_CONFIG["llm_model"],
-                        temperature=0,     # Controls response creativity
-                        #streaming=True      # Enable streaming responses
+                        temperature=0,
                     )
-                    
-                    # Show success message and celebratory animations
                     st.success("✨ Gemini model loaded successfully!")
                     st.balloons()
-                    #st.snow()
-            
-            return self.model
-            
+            return st.session_state.gemini_model
         except Exception as e:
-            # Provide detailed error feedback to the user
             st.error(f"Error initializing Gemini model: {str(e)}")
             return None
 
