@@ -265,9 +265,9 @@ def create_sidebar():
     """Create and manage sidebar elements with flexible image loading"""
     with st.sidebar:
         # Configure image sources
-        local_path = r"D:\LLM-RAG\gemini_chatbot_qna\simple-qa-chatbot\Logo RSP (Color)"
-        github_url = "https://raw.githubusercontent.com/your-username/your-repo/main/assets/rsp-logo.png"
-        default_path = "assets/rsp-logo"
+        local_path = r"D:\LLM-RAG\gemini_chatbot_qna\simple-qa-chatbot\Logo.jpg"
+        github_url = "https://raw.githubusercontent.com/Muhammadirfankarim/document-qa-bot/main/Logo.jpg"
+        default_path = "Logo.jpg"
 
         # Load image using our flexible loader
         image_source = load_image(
