@@ -1,13 +1,14 @@
 import streamlit as st
 from PyPDF2 import PdfReader
 import pandas as pd
+# Update the import for text splitter
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+# Update the imports for embeddings and vector store
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS  # Updated import path
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_google_vertexai import VertexAIEmbeddings
 import os
 import io
 import requests
