@@ -7,7 +7,6 @@ from langchain_community.vectorstores import FAISS
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_google_vertexai import VertexAIEmbeddings
 import os
 import io
 import requests
@@ -74,9 +73,9 @@ class DocumentProcessor:
     """Handles document processing."""
     
     def __init__(self):
-        self.embedding_model = VertexAIEmbeddings(
-            model_name=MODEL_CONFIG["vertex_embed_model"],
-            #model_kwargs={'device': 'cpu'}
+        self.embedding_model = HuggingFaceEmbeddings(
+            model_name=MODEL_CONFIG["embedding_model"],
+            model_kwargs={'device': 'cpu'}
         )
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=MODEL_CONFIG["chunk_size"],
@@ -98,7 +97,6 @@ class DocumentProcessor:
             vector_store = FAISS.from_texts(chunks, self.embedding_model)
             vector_store.save_local(VECTOR_STORE_PATH)
             st.success("✅ Documents processed successfully!")
-            st.ballons()
             return True
 
         except Exception as e:
@@ -183,7 +181,7 @@ def create_sidebar():
 
 def main():
     """Main Streamlit App."""
-    st.set_page_config(page_title="📚 Document Q&A Chatbot", page_icon="📖", layout="wide")
+    st.set_page_config(page_title="📚 AI Document Q&A", page_icon="📖", layout="wide")
 
     # Custom CSS for better UI
     st.markdown("""
@@ -196,7 +194,7 @@ def main():
     """, unsafe_allow_html=True)
 
     initialize_session_state()
-    st.title("📚 Document Q&A Chatbot")
+    st.title("📚 AI Document Q&A")
     
     create_sidebar()
 
