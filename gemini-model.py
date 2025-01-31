@@ -25,14 +25,14 @@ MODEL_CONFIG = {
 VECTOR_STORE_PATH = "faiss_index"
 
 class ModelManager:
-    """Manages Gemini model initialization with streaming support."""
+    """Manages Gemini model initialization."""
     
     def __init__(self):
         if "gemini_model" not in st.session_state:
             st.session_state.gemini_model = None
 
     def initialize_model(self):
-        """Initializes the Gemini model with streaming enabled."""
+        """Initializes the Gemini model with Streamlit secrets."""
         try:
             if st.session_state.gemini_model is None:
                 api_key = st.secrets["GOOGLE_API_KEY"]
@@ -43,8 +43,7 @@ class ModelManager:
                 with st.spinner("🚀 Initializing Gemini... Please wait."):
                     st.session_state.gemini_model = ChatGoogleGenerativeAI(
                         model=MODEL_CONFIG["llm_model"],
-                        temperature=0,
-                        streaming=True  # 🔥 Enable streaming responses
+                        temperature=0
                     )
                     st.success("✨ Gemini model is ready!")
             return st.session_state.gemini_model
@@ -76,7 +75,8 @@ class DocumentProcessor:
     
     def __init__(self):
         self.embedding_model = VertexAIEmbeddings(
-            model_name=MODEL_CONFIG["vertex_embed_model"]
+            model_name=MODEL_CONFIG["vertex_embed_model"],
+            #model_kwargs={'device': 'cpu'}
         )
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=MODEL_CONFIG["chunk_size"],
@@ -98,7 +98,7 @@ class DocumentProcessor:
             vector_store = FAISS.from_texts(chunks, self.embedding_model)
             vector_store.save_local(VECTOR_STORE_PATH)
             st.success("✅ Documents processed successfully!")
-            st.balloons()
+            st.ballons()
             return True
 
         except Exception as e:
@@ -185,6 +185,16 @@ def main():
     """Main Streamlit App."""
     st.set_page_config(page_title="📚 Document Q&A Chatbot", page_icon="📖", layout="wide")
 
+    # Custom CSS for better UI
+    st.markdown("""
+        <style>
+        .stApp { background-color: #f5f5f5; }
+        .chat-box { padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        .user-message { background-color: #e3f2fd; padding: 10px; border-radius: 8px; }
+        .assistant-message { background-color: #f3e5f5; padding: 10px; border-radius: 8px; }
+        </style>
+    """, unsafe_allow_html=True)
+
     initialize_session_state()
     st.title("📚 Document Q&A Chatbot")
     
@@ -229,16 +239,12 @@ def main():
                 st.markdown(query)
             
             with st.chat_message("assistant"):
-                response_container = st.empty()
-                response_stream = qa_chain.stream({"input_documents": docs, "question": query})
-
-                full_response = ""
-                for chunk in response_stream:
-                    full_response += chunk["output_text"]
-                    response_container.markdown(full_response)
-
-                st.session_state.messages.append({"role": "user", "content": query})
-                st.session_state.messages.append({"role": "assistant", "content": full_response})
+                with st.spinner("🤔 Thinking..."):
+                    response = qa_chain({"input_documents": docs, "question": query}, return_only_outputs=True)
+                    st.markdown(response["output_text"])
+            
+            st.session_state.messages.append({"role": "user", "content": query})
+            st.session_state.messages.append({"role": "assistant", "content": response["output_text"]})
                     
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
