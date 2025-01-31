@@ -52,7 +52,7 @@ class ModelManager:
                     
                     # Create the model instance with optimized parameters
                     self.model = ChatGoogleGenerativeAI(
-                        model="gemini-1.5-pro",
+                        model=MODEL_CONFIG["llm_model"],
                         temperature=0,     # Controls response creativity
                         #streaming=True      # Enable streaming responses
                     )
@@ -68,16 +68,6 @@ class ModelManager:
             # Provide detailed error feedback to the user
             st.error(f"Error initializing Gemini model: {str(e)}")
             return None
-
-    def get_model(self):
-        """
-        Provides access to the initialized model instance.
-        Ensures model is initialized before use.
-        
-        Returns:
-            ChatGoogleGenerativeAI: The initialized model instance
-        """
-        return self.initialize_model()
 
 class VectorStoreManager:
     """Manages vector store operations with proper error handling"""
