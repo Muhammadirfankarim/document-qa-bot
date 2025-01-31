@@ -186,7 +186,7 @@ def main():
     # Custom CSS for better UI
     st.markdown("""
         <style>
-        .stApp { background-color: #f5f5f5; }
+        .stApp { background-color: #ffffff; }
         .chat-box { padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
         .user-message { background-color: #e3f2fd; padding: 10px; border-radius: 8px; }
         .assistant-message { background-color: #f3e5f5; padding: 10px; border-radius: 8px; }
