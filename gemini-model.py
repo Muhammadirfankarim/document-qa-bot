@@ -105,8 +105,9 @@ class DocumentProcessor:
     """Handles document processing and vector store creation"""
     
     def __init__(self):
-        self.embedding_model = VertexAIEmbeddings(
-            model_name=MODEL_CONFIG["vertex_embed_model"],
+        self.embedding_model = HuggingFaceEmbeddings(
+            model_name=MODEL_CONFIG["embedding_model"],
+            model_kwargs={'device': 'cpu'}
         )
         
         self.text_splitter = RecursiveCharacterTextSplitter(
