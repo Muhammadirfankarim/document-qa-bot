@@ -54,7 +54,7 @@ class ModelManager:
                     self.model = ChatGoogleGenerativeAI(
                         model="gemini-1.5-pro",
                         temperature=0,     # Controls response creativity
-                        streaming=True      # Enable streaming responses
+                        #streaming=True      # Enable streaming responses
                     )
                     
                     # Show success message and celebratory animations
