@@ -11,3 +11,4 @@ python-dotenv
 requests
 torch
 transformers
+sentence-transformers
