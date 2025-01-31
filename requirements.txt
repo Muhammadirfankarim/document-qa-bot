@@ -1,0 +1,13 @@
+streamlit
+PyPDF2
+pandas
+langchain
+langchain_community
+langchain_google_genai
+langchain_google_vertexai
+faiss-cpu
+Pillow
+python-dotenv
+requests
+torch
+transformers
