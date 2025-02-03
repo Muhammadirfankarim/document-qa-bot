@@ -18,7 +18,7 @@ MODEL_CONFIG = {
     "vertex_embed_model": "text-multilingual-embedding-002",
     "chunk_size": 2000,
     "chunk_overlap": 200,
-    "llm_model": "gemini-1.5-pro"
+    "llm_model": "gemini-2.0-flash-exp"
 }
 
 VECTOR_STORE_PATH = "faiss_index"
@@ -44,7 +44,9 @@ class ModelManager:
                         model=MODEL_CONFIG["llm_model"],
                         temperature=0
                     )
-                    st.success("✨ Gemini model is ready!")
+                    #st.success("✨ Gemini model is ready!")
+
+
             return st.session_state.gemini_model
         except Exception as e:
             st.error(f"Error initializing Gemini model: {str(e)}")
@@ -97,6 +99,7 @@ class DocumentProcessor:
             vector_store = FAISS.from_texts(chunks, self.embedding_model)
             vector_store.save_local(VECTOR_STORE_PATH)
             st.success("✅ Documents processed successfully!")
+            st.balloons()
             return True
 
         except Exception as e:
@@ -160,7 +163,7 @@ def initialize_session_state():
 def create_sidebar():
     """Sidebar UI."""
     with st.sidebar:
-        st.image("https://raw.githubusercontent.com/Muhammadirfankarim/document-qa-bot/main/Logo.jpg", width=300)
+        st.image("https://raw.githubusercontent.com/Muhammadirfankarim/document-qa-bot/main/Logo2.png", width=300)
         st.header("📄 Upload Documents")
         
         uploaded_files = st.file_uploader(
@@ -175,18 +178,53 @@ def create_sidebar():
                     doc_processor = DocumentProcessor()
                     if doc_processor.process_documents(uploaded_files):
                         st.session_state["vector_store_ready"] = True
+def create_sidebar():
+    """Sidebar UI."""
+    with st.sidebar:
+        st.image("https://raw.githubusercontent.com/Muhammadirfankarim/document-qa-bot/main/Logo.jpg", width=300)
+        st.header("📄 Upload Documents")
 
-        st.button("🗑️ Clear Chat", on_click=lambda: st.session_state.update(messages=[]))
-        return uploaded_files
+        uploaded_files = st.file_uploader(
+            "Upload PDFs, TXTs, or CSVs",
+            accept_multiple_files=True,
+            key="file_uploader"
+        )
+
+        if st.button("🔄 Process Documents"):
+            if uploaded_files:
+                with st.spinner("Processing documents..."):
+                    doc_processor = DocumentProcessor()
+                    if doc_processor.process_documents(uploaded_files):
+                        st.session_state["vector_store_ready"] = True
+
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("🗑️ Clear Chat History", type="secondary", help="Delete all chat messages"):
+                if st.session_state.get('messages'):
+                    st.session_state.messages = []
+                    st.success("Chat history cleared!")
+                    st.rerun()  # 🔄 Force app to refresh
+                else:
+                    st.info("Chat is already empty")
+                    
+        with col2:
+            if st.button("🗑️ Clear Uploaded Files", type="secondary", help="Remove all uploaded documents"):
+                if uploaded_files:
+                    del st.session_state["file_uploader"]  # 🚀 Correct way to clear the file uploader
+                    st.success("Documents cleared! Refreshing...")
+                    st.rerun()  # 🔄 Force app to refresh
+                else:
+                    st.info("No documents to clear")
+
 
 def main():
     """Main Streamlit App."""
-    st.set_page_config(page_title="📚 AI Document Q&A", page_icon="📖", layout="wide")
+    st.set_page_config(page_title="📚 Document Q&A Chatbot - RSP TEAM", page_icon="📖", layout="wide")
 
     # Custom CSS for better UI
     st.markdown("""
         <style>
-        .stApp { background-color: #ffffff; }
+        .stApp { background-color: #f5f5f5; }
         .chat-box { padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
         .user-message { background-color: #e3f2fd; padding: 10px; border-radius: 8px; }
         .assistant-message { background-color: #f3e5f5; padding: 10px; border-radius: 8px; }
@@ -194,7 +232,7 @@ def main():
     """, unsafe_allow_html=True)
 
     initialize_session_state()
-    st.title("📚 AI Document Q&A")
+    st.title("📚 Document Q&A Chatbot - RSP TEAM")
     
     create_sidebar()
 
