@@ -264,6 +264,8 @@ def main():
 
                     Context: {context}
                     Question: {question}
+
+                    If user say Hi or Hello, just answer the greetings based on the language that user used for communication.
                     """,
                     input_variables=["context", "question"]
                 )
