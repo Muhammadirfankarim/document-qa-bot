@@ -44,10 +44,11 @@ class ModelManager:
                         model=MODEL_CONFIG["llm_model"],
                         temperature=0
                     )
-                    #st.success("✨ Gemini model is ready!")
-
+                    st.success("✨ Gemini model is ready!, Ask question based on the documents")
+                    st.baloon()
 
             return st.session_state.gemini_model
+            
         except Exception as e:
             st.error(f"Error initializing Gemini model: {str(e)}")
             return None
@@ -203,6 +204,7 @@ def create_sidebar():
                 if st.session_state.get('messages'):
                     st.session_state.messages = []
                     st.success("Chat history cleared!")
+                    st.snow()
                     st.rerun()  # 🔄 Force app to refresh
                 else:
                     st.info("Chat is already empty")
@@ -212,6 +214,7 @@ def create_sidebar():
                 if uploaded_files:
                     del st.session_state["file_uploader"]  # 🚀 Correct way to clear the file uploader
                     st.success("Documents cleared! Refreshing...")
+                    st.snow()
                     st.rerun()  # 🔄 Force app to refresh
                 else:
                     st.info("No documents to clear")
@@ -265,7 +268,8 @@ def main():
                     Context: {context}
                     Question: {question}
 
-                    If user say Hi or Hello, just answer the greetings based on the language that user used for communication.
+                    If user asking with spesific language, you need to answer the question based on the language that user used for communication.
+                    If user say greetings to you, just reply the greetings with some text.
                     """,
                     input_variables=["context", "question"]
                 )
