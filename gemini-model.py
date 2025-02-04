@@ -45,7 +45,7 @@ class ModelManager:
                         temperature=0
                     )
                     st.success("✨ Gemini model is ready!, Ask question based on the documents")
-                    st.baloons()
+                    st.balloons()
 
             return st.session_state.gemini_model
             
